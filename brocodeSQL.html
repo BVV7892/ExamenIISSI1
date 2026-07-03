@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Completo de SQL (MySQL)</title>
+    <style>
+        :root {
+            --primary-color: #005f73;
+            --secondary-color: #0a9396;
+            --text-color: #2b2d42;
+            --code-bg: #f8f9fa;
+            --border-color: #e5e5e5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 5px;
+            margin-top: 35px;
+            font-size: 20px;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 16px;
+            margin-top: 20px;
+            page-break-after: avoid;
+        }
+
+        p, li {
+            font-size: 14px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border-color);
+            margin: 30px 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            background-color: var(--code-bg);
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 0 4px 4px 0;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+
+        pre code {
+            padding: 0;
+            background-color: transparent;
+            font-size: 12px;
+        }
+
+        .blockquote {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+            page-break-inside: avoid;
+        }
+
+        .blockquote p {
+            margin: 0;
+            font-weight: bold;
+            color: #664d03;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                max-width: 100%;
+            }
+            .no-print {
+                display: none;
+            }
+            pre, .blockquote {
+                page-break-inside: avoid;
+                border: 1px solid #ccc;
+            }
+            h2, h3 {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="background: #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #cbd5e1;">
+        <p style="margin: 0 0 10px 0; font-weight: bold;">💡 Instrucciones para guardar como PDF:</p>
+        <ol style="margin: 0; padding-left: 20px; font-size: 13px;">
+            <li>Presiona <kbd>Ctrl + P</kbd> (Windows) o <kbd>Cmd + P</kbd> (Mac).</li>
+            <li>Selecciona <strong>Guardar como PDF</strong>.</li>
+            <li>Activa la casilla <strong>"Gráficos de fondo"</strong> para mantener los colores del diseño.</li>
+        </ol>
+    </div>
+
+    <h1>🐬 Manual Completo de SQL (Basado en MySQL)</h1>
+
+    <h2>1. Introducción a Bases de Datos y SQL</h2>
+    <ul>
+        <li><strong>SQL (Structured Query Language):</strong> Lenguaje utilizado para crear, recuperar, actualizar y borrar datos (operaciones CRUD) en una base de datos.</li>
+        <li><strong>Bases de Datos Relacionales:</strong> Organizan los datos en tablas con filas y columnas. Las tablas se vinculan entre sí utilizando llaves (keys) y operan bajo lenguaje SQL.</li>
+        <li><strong>Bases de Datos No Relacionales (NoSQL):</strong> Organizan la información en formatos alternativos como documentos JSON, pares clave-valor o estructuras de grafos.</li>
+        <li><strong>DBMS (Database Management System):</strong> Software gestor que proporciona el espacio de trabajo para administrar las bases de datos (Ej: MySQL, PostgreSQL, Oracle, SQL Server).</li>
+    </ul>
+
+    <h3>Configuración de Conexión Estándar</h3>
+    <p>Para establecer conexión con el servidor de MySQL local a través de MySQL Workbench se requiere:</p>
+    <ul>
+        <li><strong>Método:</strong> Standard TCP/IP</li>
+        <li><strong>Hostname:</strong> 127.0.0.1 (Localhost)</li>
+        <li><strong>Puerto:</strong> 3306</li>
+    </ul>
+
+    <hr>
+
+    <h2>2. Gestión de Bases de Datos (Esquemas)</h2>
+    <p>Las palabras clave en SQL no distinguen entre mayúsculas y minúsculas. Sin embargo, se aconseja estructurarlas en mayúsculas para aumentar la legibilidad del código. Cada instrucción debe cerrarse con un punto y coma (;).</p>
+
+<pre><code>-- Crear una nueva base de datos
+CREATE DATABASE mydb;
+
+-- Seleccionar el esquema para empezar a trabajar
+USE mydb;
+
+-- Eliminar de forma definitiva la base de datos
+DROP DATABASE mydb;
+
+-- Alterar la base de datos (Ej: Modo lectura para proteger datos)
+ALTER DATABASE mydb READ ONLY = 1; -- 1 activa lectura, 0 la desactiva</code></pre>
+
+    <hr>
+
+    <h2>3. Operaciones Básicas con Tablas (DDL)</h2>
+    <p>Las tablas representan las estructuras encargadas de definir las columnas junto con sus respectivos tipos de datos permitidos.</p>
+
+    <h3>Tipos de Datos Comunes</h3>
+    <ul>
+        <li><code>INT</code>: Números enteros sin decimales.</li>
+        <li><code>VARCHAR(X)</code>: Almacena cadenas de texto con un límite máximo ajustable de X caracteres.</li>
+        <li><code>DECIMAL(M, D)</code>: Números de precisión exacta. Donde M es la cantidad total de dígitos y D la cantidad de decimales reservados (Ej: DECIMAL(5,2) almacena valores hasta el 999.99).</li>
+        <li><code>DATE</code>: Almacena fechas bajo el estándar estructural AAAA-MM-DD.</li>
+        <li><code>DATETIME</code>: Registra simultáneamente tanto la fecha como la hora exacta de un suceso.</li>
+    </ul>
+
+    <h3>Comandos de Estructura</h3>
+<pre><code>-- Crear una tabla inicial
+CREATE TABLE empleados (
+    empleado_id INT,
+    nombre VARCHAR(50),
+    apellido VARCHAR(50),
+    pago_hora DECIMAL(5,2),
+    fecha_contratacion DATE
+);
+
+-- Renombrar una tabla dentro del esquema
+RENAME TABLE empleados TO trabajadores;
+
+-- Eliminar la tabla por completo
+DROP TABLE empleados;</code></pre>
+
+    <h3>Alterar Tablas (ALTER TABLE)</h3>
+<pre><code>-- Incorporar una nueva columna
+ALTER TABLE empleados ADD telefono VARCHAR(15);
+
+-- Renombrar una columna existente
+ALTER TABLE empleados RENAME COLUMN telefono TO email;
+
+-- Modificar el tipo de dato o longitud de una columna
+ALTER TABLE empleados MODIFY COLUMN email VARCHAR(100);
+
+-- Reposicionar una columna en la tabla
+ALTER TABLE empleados MODIFY COLUMN email VARCHAR(100) AFTER apellido;
+
+-- Remover una columna
+ALTER TABLE empleados DROP COLUMN email;</code></pre>
+
+    <hr>
+
+    <h2>4. Manipulación de Datos (DML) y Consultas</h2>
+
+    <h3>Insertar Datos (INSERT INTO)</h3>
+<pre><code>-- Insertar un registro completo respetando el orden de columnas
+INSERT INTO empleados VALUES (1, 'Eugene', 'Cangrejo', 25.50, '2023-01-02');
+
+-- Inserción masiva de múltiples registros simultáneos
+INSERT INTO empleados VALUES 
+(2, 'Calamardo', 'Tentáculos', 15.00, '2023-01-03'),
+(3, 'Bob', 'Esponja', 12.50, '2023-01-04');
+
+-- Insertar omitiendo ciertas columnas (las omitidas se guardarán como NULL)
+INSERT INTO empleados (empleado_id, nombre, apellido) VALUES (6, 'Sheldon', 'Plankton');</code></pre>
+
+    <h3>Seleccionar y Filtrar (SELECT + WHERE)</h3>
+    <p>El uso del operador asterisco (*) indica al motor de base de datos la selección de todas las columnas disponibles de una tabla.</p>
+<pre><code>-- Selección selectiva de columnas
+SELECT nombre, apellido FROM empleados;
+
+-- Filtrado preciso con la cláusula WHERE
+SELECT * FROM empleados WHERE empleado_id = 1;
+SELECT * FROM empleados WHERE pago_hora >= 15.00;
+
+-- Validación correcta de campos vacíos (Se utiliza "IS NULL" / "IS NOT NULL")
+SELECT * FROM empleados WHERE fecha_contratacion IS NULL;
+SELECT * FROM empleados WHERE fecha_contratacion IS NOT NULL;</code></pre>
+
+    <div class="blockquote">
+        <p>⚠️ ADVERTENCIA CRÍTICA: Si se ejecuta una sentencia UPDATE o DELETE omitiendo por descuido la cláusula WHERE, el cambio afectará de forma irreversible a todos los registros de la tabla.</p>
+    </div>
+
+<pre><code>-- Actualización de datos puntuales
+UPDATE empleados 
+SET pago_hora = 10.25, fecha_contratacion = '2023-01-07' 
+WHERE empleado_id = 6;
+
+-- Eliminación controlada de un registro
+DELETE FROM empleados WHERE empleado_id = 6;</code></pre>
+
+    <hr>
+
+    <h2>5. Transacciones (COMMIT y ROLLBACK)</h2>
+    <p>Por defecto, MySQL opera en modo autocommit, lo que guarda inmediatamente cualquier instrucción ejecutada. Desactivar esta opción permite manipular bases de datos de forma segura mediante la creación de puntos de restauración manuales.</p>
+<pre><code>-- Apagar el guardado inmediato automático
+SET autocommit = OFF;
+
+-- Confirmar de forma manual y crear un punto seguro de restauración
+COMMIT;
+
+-- Caso de error: Borrado accidental sin filtrar
+DELETE FROM empleados;
+
+-- Deshacer la última operación fallida regresando al estado del último COMMIT
+ROLLBACK;</code></pre>
+
+    <hr>
+
+    <h2>6. Restricciones (Constraints)</h2>
+    <p>Las restricciones se asocian de manera directa a columnas específicas para validar o limitar el tipo de datos aceptados dentro del sistema.</p>
+    <ul>
+        <li><strong>UNIQUE:</strong> Garantiza que ningún valor de la columna se repita en la tabla.</li>
+        <li><strong>NOT NULL:</strong> Prohíbe la inserción de campos vacíos (NULL).</li>
+        <li><strong>CHECK:</strong> Condiciona la entrada evaluando una regla lógica (Ej: rangos numéricos).</li>
+        <li><strong>DEFAULT:</strong> Inyecta de forma automatizada un valor predeterminado si el usuario omite el campo.</li>
+        <li><strong>PRIMARY KEY:</strong> Identificador único de cada fila de la tabla. Es la unión estricta de las reglas UNIQUE y NOT NULL. Sólo puede existir una por tabla.</li>
+        <li><strong>AUTO_INCREMENT:</strong> Instruye a campos clave enteros para autogenerarse incrementando su valor secuencialmente en 1.</li>
+    </ul>
+
+<pre><code>-- Creación de tabla aplicando restricciones integradas
+CREATE TABLE productos (
+    producto_id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_producto VARCHAR(25) UNIQUE NOT NULL,
+    precio DECIMAL(4,2) DEFAULT 0.00,
+    CONSTRAINT chk_precio CHECK (precio >= 0.00)
+);
+
+-- Inyectar restricciones en estructuras ya preexistentes
+ALTER TABLE productos ADD CONSTRAINT nombre_unico UNIQUE (nombre_producto);</code></pre>
+
+    <hr>
+
+    <h2>7. Llaves Foráneas y Uniones (FOREIGN KEY y JOINS)</h2>
+
+    <h3>Llave Foránea (FOREIGN KEY)</h3>
+    <p>Es una columna que sirve de puente de comunicación vinculando de forma directa la PRIMARY KEY perteneciente a una tabla externa. Resguarda la integridad referencial, bloqueando intentos de borrado sobre un elemento padre si este cuenta aún con elementos hijos subordinados.</p>
+<pre><code>CREATE TABLE transacciones (
+    transaccion_id INT PRIMARY KEY AUTO_INCREMENT,
+    monto DECIMAL(5,2),
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES clientes(customer_id)
+);</code></pre>
+
+    <h3>Tipos de Joins (Combinación de tablas)</h3>
+    <ul>
+        <li><strong>INNER JOIN:</strong> Reúne y entrega únicamente las filas cuyas llaves tengan una correspondencia exacta en ambas tablas.</li>
+        <li><strong>LEFT JOIN:</strong> Entrega el universo completo de la tabla izquierda, junto a los datos emparejados de la derecha. Si no hay coincidencia, rellena con campos vacíos (NULL).</li>
+        <li><strong>RIGHT JOIN:</strong> Entrega el universo completo de la tabla derecha, trayendo los emparejamientos encontrados de la tabla izquierda.</li>
+    </ul>
+
+    <h3>Cláusulas de Comportamiento ON DELETE</h3>
+    <p>Determinan la acción automática a tomar en la fila hija tras remover la fila padre de la base de datos:</p>
+    <ul>
+        <li>ON DELETE SET NULL: Resetea el campo de la llave foránea secundaria del hijo a NULL.</li>
+        <li>ON DELETE CASCADE: Ejecuta un borrado en cadena, destruyendo al hijo en consecuencia.</li>
+    </ul>
+
+    <hr>
+
+    <h2>8. Funciones Agregadas y Operadores Lógicos</h2>
+
+    <h3>Funciones de Agregación</h3>
+    <ul>
+        <li><code>COUNT()</code>: Efectúa el conteo total de filas coincidentes.</li>
+        <li><code>MAX()</code> / <code>MIN()</code>: Extraen respectivamente el valor numérico más alto o bajo detectado.</li>
+        <li><code>AVG()</code>: Ejecuta el cálculo promedio aritmético sobre el grupo de datos.</li>
+        <li><code>SUM()</code>: Totaliza mediante la adición de los valores acumulados.</li>
+        <li><code>CONCAT()</code>: Enlaza textos dispersos en múltiples campos en una única cadena uniforme.</li>
+        <li><code>AS</code>: Crea alias representativos modificando el nombre visual de campos temporalmente.</li>
+    </ul>
+
+    <h3>Operadores Lógicos y Comodines (Wildcards)</h3>
+    <ul>
+        <li>AND, OR, NOT: Permiten hilar y condicionar búsquedas mediante álgebra lógica estructurada.</li>
+        <li>BETWEEN X AND Y: Acota resultados validando rangos de forma estrictamente inclusiva.</li>
+        <li>IN (): Simplifica la búsqueda comprobando si un valor está incluido en un listado predefinido.</li>
+        <li>LIKE: Ejecuta búsquedas avanzadas de texto mediante patrones asistidos por comodines:
+            <ul>
+                <li>%: Reemplaza dinámicamente un número indefinido de caracteres aleatorios.</li>
+                <li>_: Sustituye con exactitud un único carácter aislado por posición.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <h2>9. Ordenar, Limitar y Agrupar Datos</h2>
+
+    <h3>ORDER BY y LIMIT</h3>
+    <ul>
+        <li>ORDER BY columna ASC/DESC: Modifica la disposición de filas presentándolas de forma ascendente o descendente.</li>
+        <li>LIMIT X: Impone un tope para procesar únicamente un volumen X máximo de filas.</li>
+    </ul>
+
+    <h3>GROUP BY, HAVING y ROLLUP</h3>
+    <ul>
+        <li>GROUP BY: Compacta filas duplicadas compartidas bajo un criterio agrupador, ideal para operar funciones agregadas.</li>
+        <li>HAVING: Identico al operador WHERE, pero actúa aplicando restricciones exclusivamente sobre los datos consolidados tras la ejecución del GROUP BY.</li>
+        <li>WITH ROLLUP: Agrega una fila de superagregación al final mostrando el cálculo del gran total acumulativo del grupo.</li>
+    </ul>
+
+    <hr>
+
+    <h2>10. Operaciones Avanzadas</h2>
+
+    <h3>UNION</h3>
+    <p>Une la salida resultante de varias peticiones SELECT. Exige como prerrequisito que las consultas cuenten exactamente con el mismo número de columnas asignadas bajo el mismo orden tipificado.</p>
+    <ul>
+        <li>UNION: Purga y descarta filas repetidas del set definitivo.</li>
+        <li>UNION ALL: Junta las tablas anexando todo, sin discriminar registros repetidos.</li>
+    </ul>
+
+    <h3>Subconsultas (Subqueries)</h3>
+    <p>Incrustación de una petición SQL completa alojada internamente en otra mayor (delimitada por paréntesis). Su ejecución es prioritaria, entregando el resultado a la consulta contenedora externa para su resolución final.</p>
+
+    <h3>Vistas (VIEWS)</h3>
+    <p>Tablas virtuales dinámicas de carácter lógico generadas a partir del mapeo de consultas reales. No replican la información, manteniendo sincronización automática ante alteraciones del origen real de los datos.</p>
+
+    <h3>Índices (INDEX)</h3>
+    <p>Estructuras optimizadas diseñadas para agilizar la localización de información en columnas de alta demanda.</p>
+    <ul>
+        <li><strong>Ventaja:</strong> Incrementa la velocidad en lecturas y búsquedas de datos.</li>
+        <li><strong>Desventaja:</strong> Reduce marginalmente la velocidad operativa de escrituras (INSERT, UPDATE) por mantenimiento estructural.</li>
+    </ul>
+
+    <hr>
+
+    <h2>11. Procedimientos Almacenados y Triggers</h2>
+
+    <h3>Procedimientos Almacenados (Stored Procedures)</h3>
+    <p>Fragmentos de sentencias SQL compilados directamente en el servidor listos para ser invocados reiteradamente mediante un alias identificador. Maximizan el rendimiento reduciendo la transferencia de tráfico en la red. Demandan el cambio del delimitador (DELIMITER) para evitar malinterpretaciones del motor al procesar el punto y coma nativo interno.</p>
+
+<pre><code>DELIMITER $$
+CREATE PROCEDURE EncontrarCliente(IN cliente_id INT)
+BEGIN
+    SELECT * FROM clientes WHERE customer_id = cliente_id;
+END $$
+DELIMITER ;
+
+-- Invocación
+CALL EncontrarCliente(3);</code></pre>
+
+    <h3>Triggers (Disparadores)</h3>
+    <p>Rutinas de código automatizadas programadas para reaccionar inmediatamente ante la llegada de un evento operativo (INSERT, UPDATE, o DELETE) sobre tablas vigiladas. Utilizan variables contextuales de captura de estado: NEW (atrapa valores entrantes) y OLD (atrapa valores preexistentes modificados o removidos).</p>
+
+<pre><code>CREATE TRIGGER antes_actualizar_pago
+BEFORE UPDATE ON empleados
+FOR EACH ROW
+BEGIN
+    SET NEW.salario = NEW.pago_hora * 2080;
+END;</code></pre>
+
+</body>
+</html>
